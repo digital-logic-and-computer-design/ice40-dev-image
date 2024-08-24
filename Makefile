@@ -1,10 +1,11 @@
 IMAGE := bsiever/ice40-dev
+TAG?=test	
 
 .PHONY: default
 default: run
 
 build:
-	docker build --build-arg VCS_REF=$(shell git rev-parse HEAD) --tag $(IMAGE) .
+	docker build --build-arg VCS_REF=$(shell git rev-parse HEAD) --tag $(IMAGE):$(TAG) .
 
 depends:
 	brew install docker-squash
@@ -18,3 +19,7 @@ run:
 
 squash: depends
 	docker-squash --tag $(IMAGE) $(IMAGE)
+
+# Push the image.  If there's a command line argument, use that as the tag
+push:
+	docker push $(IMAGE):$(TAG)
