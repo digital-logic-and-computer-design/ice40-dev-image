@@ -7,7 +7,8 @@ build:
 	docker build --build-arg VCS_REF=$(shell git rev-parse HEAD) --tag $(IMAGE) .
 
 depends:
-	pip3 install docker-squash
+	brew install docker-squash
+#	pip3 install docker-squash
 
 rebuild:
 	docker build --build-arg VCS_REF=$(shell git rev-parse HEAD) --no-cache --tag $(IMAGE) .

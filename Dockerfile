@@ -47,8 +47,8 @@ RUN pipx install \
 RUN apt-get -y install \
     iverilog \
     verilator \
-    yosys \         
-    nextpnr
+    yosys 
+
 
 # Python Verilog testbench tools 
 RUN pipx install \
@@ -64,7 +64,8 @@ RUN pipx install git+https://github.com/fischermoseley/manta.git
 
 # ice40 specific tools
 RUN apt-get -y install \
-    fpga-icestorm 
+    fpga-icestorm \
+    nextpnr-ice40
 
 # RISC-V tools
 RUN apt-get -y install \
