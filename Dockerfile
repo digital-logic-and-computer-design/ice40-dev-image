@@ -22,9 +22,11 @@ RUN apt-get -y install \
     npm 
 RUN npm install --global \
     express
-# Install mkcert to generate a certificate for the server (TODO: Check)
-RUN npm install --global \
+# Install mkcert to generate a certificate for the server
+RUN apt-get -y install \
+    libnss3-tools \
     mkcert
+
 
 ### General deveopment tools
 RUN apt-get -y install \
@@ -102,3 +104,8 @@ COPY ./etc /etc
 COPY ./opt /opt
 # Expose the port used by the fpga server
 EXPOSE 3000  
+
+
+# Make the locally installed things available in the path / global
+ENV PATH="$PATH:/root/.local/bin/"
+#RUN mv -rf /root/.local/bin/ /usr/local/bin/
