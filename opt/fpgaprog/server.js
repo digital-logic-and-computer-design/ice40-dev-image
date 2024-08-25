@@ -2,7 +2,7 @@ import express from 'express'
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
-import https from 'https'
+//import https from 'https'
 import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -80,17 +80,17 @@ router.get('/*', (_req, res) => {
 app.use('/', express.static(publicPath))
 app.use(router)
 
-const options = {
-  key: fs.readFileSync(path.join(__dirname, 'localhost+2-key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'localhost+2.pem'))
-}
+// const options = {
+//   key: fs.readFileSync(path.join(__dirname, 'localhost+2-key.pem')),
+//   cert: fs.readFileSync(path.join(__dirname, 'localhost+2.pem'))
+// }
 
-// Create HTTPS server
-const server = https.createServer(options, app)
-server.listen(port, () => {
-  console.log(`FPGA Loader listening on port ${port}`)
-})
-
-// app.listen(port, () => {
+// // Create HTTPS server
+// const server = https.createServer(options, app)
+// server.listen(port, () => {
 //   console.log(`FPGA Loader listening on port ${port}`)
 // })
+
+app.listen(port, () => {
+  console.log(`FPGA Loader listening on port ${port}`)
+})
