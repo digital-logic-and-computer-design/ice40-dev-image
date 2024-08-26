@@ -22,11 +22,6 @@ RUN apt-get -y install \
     npm 
 RUN npm install --global \
     express
-# Install mkcert to generate a certificate for the server
-RUN apt-get -y install \
-    libnss3-tools \
-    mkcert
-
 
 ### General deveopment tools
 RUN apt-get -y install \
