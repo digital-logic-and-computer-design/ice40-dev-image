@@ -98,7 +98,7 @@ COPY ./etc /etc
 # Copy optional things, including the fpga server
 COPY ./opt /opt
 # Expose the port used by the fpga server
-# EXPOSE 3000  
+EXPOSE 3000  
 
 
 # Make the locally installed things available in the path / global
