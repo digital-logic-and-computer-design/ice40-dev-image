@@ -93,6 +93,12 @@ RUN apt update && \
         bg_BG.UTF-8
 ENV LANG=C.UTF-8
 
+# Verible https://igorfreire.com.br/tag/verible/
+ARG TARGETPLATFORM
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then ARCHITECTURE=arm64; else ARCHITECTURE=arm64; fi  && \
+    wget https://github.com/chipsalliance/verible/releases/download/v0.0-3833-gcf1fc255/verible-v0.0-3833-gcf1fc255-linux-static-${ARCHITECTURE}.tar.gz && \
+    tar -C /usr/local --strip-components 1 -xf verible-v0.0-3833-gcf1fc255-linux-static-${ARCHITECTURE}.tar.gz 
+
 # Copy local files to image
 COPY ./etc /etc
 # Copy optional things, including the fpga server
