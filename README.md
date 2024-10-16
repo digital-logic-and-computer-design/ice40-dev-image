@@ -4,12 +4,12 @@ Be sure Docker Desktop is running, up-to-date, and that you're logged in.
 
 ## TAG
 
-Use `TAG=tagname`, like `TAG=v1` on `make` command line
+Use `TAG=tag`, like `TAG=v1` on `make` command line
 
 # General 
 
-* `make build`: Build image 
-* `make rebuild`: Force full rebuild without using cached work
+* `make build TAG=tag`: Build image 
+* `make rebuild TAG=tag`: Force full rebuild without using cached work
 
 # Deploying to Dockerhub
 
@@ -19,5 +19,7 @@ Use `TAG=tagname`, like `TAG=v1` on `make` command line
 ### Example
 
 ```
+make build TAG=v1
+make push TAG=v1
 make make-latest TAG=v1
 ```

@@ -10,7 +10,9 @@ ARG BUILDARCH
 # Stage-wide dependencies
 RUN apt update && \
     apt install --no-install-recommends --no-install-suggests --yes \
-        build-essential \
+        build-essential 
+
+RUN apt-get -y install \
         ca-certificates \
         curl \ 
         wget
@@ -110,3 +112,7 @@ EXPOSE 3000
 # Make the locally installed things available in the path / global
 ENV PATH="$PATH:/root/.local/bin/"
 #RUN mv -rf /root/.local/bin/ /usr/local/bin/
+
+# Graphviz for .dot files 
+RUN apt-get -y install \
+    graphviz
