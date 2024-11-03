@@ -116,3 +116,6 @@ ENV PATH="$PATH:/root/.local/bin/"
 # Graphviz for .dot files 
 RUN apt-get -y install \
     graphviz
+
+RUN apt-get -y install \
+    python3-json5
