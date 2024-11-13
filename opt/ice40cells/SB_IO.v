@@ -44,6 +44,7 @@ module SB_IO (
 	// work around simulation glitches on dout in DDR mode
 	reg outclk_delayed_1;
 	reg outclk_delayed_2;
+	// verilator lint_off COMBDLY
 	always @* outclk_delayed_1 <= OUTPUT_CLK;
 	always @* outclk_delayed_2 <= outclk_delayed_1;
 
