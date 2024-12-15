@@ -36,11 +36,14 @@ RUN apt-get -y install \
     pipx
 
 ### Python development packages (some needed for cocotb)
-RUN pipx install \
-    flake8 \
-    isort \
-    pytest \
-    yapf
+# RUN pipx install \
+#     flake8 \
+#     isort \
+#     pytest \
+#     yapf \
+
+
+
 
 # Generic verilog support tools
 RUN apt-get -y install \
@@ -50,12 +53,10 @@ RUN apt-get -y install \
 
 
 # Python Verilog testbench tools 
-RUN pipx install \
-        cocotb \
-        cocotb-test
+# RUN pipx install \
+#         cocotb \
+#         cocotb-test
 
-# Manta / FPGA on-device debugger (Depends on python being installed)
-RUN pipx install git+https://github.com/fischermoseley/manta.git
 
 # TODO / Consider
 ## Consider using a newer version of yosys and the system verilog 
@@ -96,10 +97,10 @@ RUN apt update && \
 ENV LANG=C.UTF-8
 
 # Verible https://igorfreire.com.br/tag/verible/
-ARG TARGETPLATFORM
-RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then ARCHITECTURE=arm64; else ARCHITECTURE=arm64; fi  && \
-    wget https://github.com/chipsalliance/verible/releases/download/v0.0-3833-gcf1fc255/verible-v0.0-3833-gcf1fc255-linux-static-${ARCHITECTURE}.tar.gz && \
-    tar -C /usr/local --strip-components 1 -xf verible-v0.0-3833-gcf1fc255-linux-static-${ARCHITECTURE}.tar.gz 
+# ARG TARGETPLATFORM
+# RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then ARCHITECTURE=arm64; else ARCHITECTURE=arm64; fi  && \
+#     wget https://github.com/chipsalliance/verible/releases/download/v0.0-3833-gcf1fc255/verible-v0.0-3833-gcf1fc255-linux-static-${ARCHITECTURE}.tar.gz && \
+#     tar -C /usr/local --strip-components 1 -xf verible-v0.0-3833-gcf1fc255-linux-static-${ARCHITECTURE}.tar.gz 
 
 # Copy local files to image
 COPY ./etc /etc
@@ -117,5 +118,25 @@ ENV PATH="$PATH:/root/.local/bin/"
 RUN apt-get -y install \
     graphviz
 
-RUN apt-get -y install \
-    python3-json5
+# RUN apt-get -y install \
+#     python3-json5
+
+# Manta / FPGA on-device debugger (Depends on python being installed)
+RUN pipx install git+https://github.com/fischermoseley/manta.git
+
+
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV 
+RUN $VIRTUAL_ENV/bin/pip install \
+    flake8 \
+    isort \
+    pytest \
+    yapf \
+    cocotb \
+    cocotb-test \ 
+    json5 
+
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+# Link the venv python to be default python
+# RUN ln -s /venv/bin/python /usr/bin/python
+# RUN ln -s /venv/bin/python /usr/bin/python3
