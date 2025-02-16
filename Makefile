@@ -8,10 +8,10 @@ default: run
 # Enable multi-platform builds in Docker. See: https://docs.docker.com/desktop/containerd/ 
 updateExtensions: 
 	mkdir -p opt
-	echo "Updating extensions: Disabled temporarily.  Update Makefile when desired"
+	(cd opt; ./updateExtensions.sh)
 
 # Disable temporarily
-#	(cd opt; ./updateExtensions.sh)
+# echo "Updating extensions: Disabled temporarily.  Update Makefile when desired"
 
 build: updateExtensions etc updateBuildNo
 	@echo Building $(IMAGE):$(TAG)

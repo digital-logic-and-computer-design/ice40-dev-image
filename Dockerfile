@@ -25,7 +25,7 @@ RUN apt-get -y install \
 RUN npm install --global \
     express
 
-### General deveopment tools
+### General development tools
 RUN apt-get -y install \
     git \
     universal-ctags 
@@ -35,28 +35,11 @@ RUN apt-get -y install \
     python3-pip \
     pipx
 
-### Python development packages (some needed for cocotb)
-# RUN pipx install \
-#     flake8 \
-#     isort \
-#     pytest \
-#     yapf \
-
-
-
-
 # Generic verilog support tools
 RUN apt-get -y install \
     iverilog \
     verilator \
     yosys 
-
-
-# Python Verilog testbench tools 
-# RUN pipx install \
-#         cocotb \
-#         cocotb-test
-
 
 # TODO / Consider
 ## Consider using a newer version of yosys and the system verilog 
@@ -102,14 +85,6 @@ ENV LANG=C.UTF-8
 #     wget https://github.com/chipsalliance/verible/releases/download/v0.0-3833-gcf1fc255/verible-v0.0-3833-gcf1fc255-linux-static-${ARCHITECTURE}.tar.gz && \
 #     tar -C /usr/local --strip-components 1 -xf verible-v0.0-3833-gcf1fc255-linux-static-${ARCHITECTURE}.tar.gz 
 
-# Copy local files to image
-COPY ./etc /etc
-# Copy optional things, including the fpga server
-COPY ./opt /opt
-# Expose the port used by the fpga server
-EXPOSE 3000  
-
-
 # Make the locally installed things available in the path / global
 ENV PATH="$PATH:/root/.local/bin/"
 #RUN mv -rf /root/.local/bin/ /usr/local/bin/
@@ -124,7 +99,7 @@ RUN apt-get -y install \
 # Manta / FPGA on-device debugger (Depends on python being installed)
 RUN pipx install git+https://github.com/fischermoseley/manta.git
 
-
+# Install python and Cocotb utils 
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV 
 RUN $VIRTUAL_ENV/bin/pip install \
@@ -137,6 +112,26 @@ RUN $VIRTUAL_ENV/bin/pip install \
     json5 
 
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Expose the port used by the fpga server
+EXPOSE 3000  
+
+# Copy local files to image
+COPY ./etc /etc
+# Copy optional things, including the fpga server
+COPY ./opt /opt
+
+
+# Install netlist viewer (from drichmond / USC x25: https://github.com/UCSC-CSE-x25/dockerfiles/blob/main/base/Dockerfile )
+# RUN apt-get -y install npm
+# RUN git clone https://github.com/nturley/netlistsvg
+# RUN cd netlistsvg && npm install --legacy-peer-deps && npm install -g .
+
+# VHDL Support
+# RUN apt-get -y install \
+#     ghdl
+
 # Link the venv python to be default python
 # RUN ln -s /venv/bin/python /usr/bin/python
 # RUN ln -s /venv/bin/python /usr/bin/python3
+### Python development packages (some needed for cocotb)
