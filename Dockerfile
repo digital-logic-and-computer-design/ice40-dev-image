@@ -106,7 +106,8 @@ RUN $VIRTUAL_ENV/bin/pip install \
     yapf \
     cocotb \
     cocotb-test \ 
-    json5 
+    json5 \
+    json2table
 
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
