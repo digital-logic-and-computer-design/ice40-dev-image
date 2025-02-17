@@ -41,6 +41,42 @@ app.get('/images', (req, res) => {
 })
 
 // Create a function to check if a file exists and if so encode and send it
+const sendHTMLFile = (imageName, res) => {
+  if (fs.existsSync(`${directory}/${imageName}`)) {
+    fs.readFile(`${directory}/${imageName}`, (err, data) => {
+      if (err) {
+        console.error(err)
+        return res.status(500).send('Error reading HTML file')
+      }
+
+      res.writeHead(200, {
+        'Content-Type': 'text/html',
+        'Content-Length': data.length
+      })
+      res.end(data)
+    })
+  }
+}
+
+// Create a function to check if a file exists and if so encode and send it
+const sendSVGFile = (imageName, res) => {
+  if (fs.existsSync(`${directory}/${imageName}`)) {
+    fs.readFile(`${directory}/${imageName}`, (err, data) => {
+      if (err) {
+        console.error(err)
+        return res.status(500).send('Error reading SVG file')
+      }
+
+      res.writeHead(200, {
+        'Content-Type': 'image/svg+xml',
+        'Content-Length': data.length
+      })
+      res.end(data)
+    })
+  }
+}
+
+// Create a function to check if a file exists and if so encode and send it
 const sendFile = (imageName, res) => {
   if (fs.existsSync(`${directory}/${imageName}`)) {
     const file = fs.readFileSync(`${directory}/${imageName}`)
@@ -91,6 +127,22 @@ app.get('/debug/:imageName', (req, res) => {
   // See if a file with the given name exists in . and if it ends with .bin
   if (imageName.endsWith('.manta.json')) {
     sendJsonFile(imageName, res)
+  }
+})
+
+app.get('/svg/:imageName', (req, res) => {
+  const imageName = req.params.imageName
+  // See if a file with the given name exists in . and if it ends with .bin
+  if (imageName.endsWith('.svg')) {
+    sendSVGFile(imageName, res)
+  }
+})
+
+app.get('/html/:imageName', (req, res) => {
+  const imageName = req.params.imageName
+  // See if a file with the given name exists in . and if it ends with .bin
+  if (imageName.endsWith('.html')) {
+    sendHTMLFile(imageName, res)
   }
 })
 

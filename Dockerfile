@@ -93,9 +93,6 @@ ENV PATH="$PATH:/root/.local/bin/"
 RUN apt-get -y install \
     graphviz
 
-# RUN apt-get -y install \
-#     python3-json5
-
 # Manta / FPGA on-device debugger (Depends on python being installed)
 RUN pipx install git+https://github.com/fischermoseley/manta.git
 
@@ -113,15 +110,6 @@ RUN $VIRTUAL_ENV/bin/pip install \
 
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Expose the port used by the fpga server
-EXPOSE 3000  
-
-# Copy local files to image
-COPY ./etc /etc
-# Copy optional things, including the fpga server
-COPY ./opt /opt
-
-
 # Install netlist viewer (from drichmond / USC x25: https://github.com/UCSC-CSE-x25/dockerfiles/blob/main/base/Dockerfile )
 # RUN apt-get -y install npm
 # RUN git clone https://github.com/nturley/netlistsvg
@@ -131,7 +119,14 @@ COPY ./opt /opt
 # RUN apt-get -y install \
 #     ghdl
 
-# Link the venv python to be default python
-# RUN ln -s /venv/bin/python /usr/bin/python
-# RUN ln -s /venv/bin/python /usr/bin/python3
-### Python development packages (some needed for cocotb)
+
+# Expose the port used by the fpga server
+EXPOSE 3000  
+
+# Copy local files to image
+COPY ./etc /etc
+# Copy optional things, including the fpga server
+COPY ./opt /opt
+
+
+
