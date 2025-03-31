@@ -12,6 +12,7 @@ const ProgrammingPhases = {
 
 let programmingPhase = ProgrammingPhases.IDLE
 let progress = 0
+let lastImage = null
 
 function changePhase(newPhase, progressUpdate = null) {
   if (progressUpdate !== null) {
@@ -23,6 +24,13 @@ function changePhase(newPhase, progressUpdate = null) {
       case ProgrammingPhases.PROGRAMMING:
         progress = 0
         break
+
+      case ProgrammingPhases.FAILED:
+      case ProgrammingPhases.DISCONNECTED:
+      case ProgrammingPhases.NODEVICE:
+        lastImage = null
+      // Fall through to default
+
       default: // Other phases are "done"
         progress = 100
         break
@@ -115,11 +123,38 @@ function base64ToArrayBuffer(base64) {
   return bytes
 }
 
+// DUPLICATE FUNCTION!  KEEP DEFAULTS IN SYNC (deviceworker.js and devicemanager.js)
+async function getImageMetadata(name) {
+  // Check for presence of ./images/name.json file
+  let imageMetaDataFetch = await fetch('./metadata/' + name + '.json')
+  let defaults = {
+    overrideAllArgs: false,
+    additionalArguments: null,
+    uartBaudRate: 1000000,
+    uart: false
+  }
+  if (imageMetaDataFetch.ok) {
+    let imageMetaData = await imageMetaDataFetch.json()
+    // Merge the metadata with the defaults
+    imageMetaData = { ...defaults, ...imageMetaData }
+    return imageMetaData
+  } else {
+    stdout('No metadata found. Using default settings.\n')
+    return defaults
+  }
+}
+
 // Upload the image to the FPGA
 async function upload(filename) {
   changePhase(ProgrammingPhases.ERASING)
   // Get the image
   let imageData = await getImage(filename)
+  let metaData = await getImageMetadata(filename)
+
+  // Save the image and metadata for later
+  lastImage = imageData
+  lastImage.metaData = metaData
+
   // Compute the data's sha1 checksum
   // Convert the data to an array buffer
   let data = new TextEncoder().encode(imageData.data)
@@ -135,7 +170,17 @@ async function upload(filename) {
   let binaryData = base64ToArrayBuffer(imageData.data)
   // Convert data to uint8 array from ascii / hex
   var filesData = { 'data.fs': binaryData }
-  const moduleArgs = ['-b', 'ice40_generic', '-v', '-c', 'ft232', '-f', 'data.fs']
+
+  let moduleArgs = ['-b', 'ice40_generic', '-v', '-c', 'ft232', '-f', 'data.fs']
+  if (metaData.overrideAllArgs) {
+    moduleArgs = []
+    stdout('Standard Arguments Overridden\n')
+  }
+  if (metaData.additionalArguments) {
+    moduleArgs = moduleArgs.concat(metaData.additionalArguments)
+    stdout('Additional arguments: ' + metaData.additionalArguments + '\n')
+  }
+
   try {
     await openFPGA.runOpenFPGALoader(moduleArgs, filesData, {
       stdout: stdoutFunction,

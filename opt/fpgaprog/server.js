@@ -130,6 +130,14 @@ app.get('/debug/:imageName', (req, res) => {
   }
 })
 
+// Fetch image metadata (same name as bin file but with .bin.json extension)
+app.get('/metadata/:metadataName', (req, res) => {
+  const imageName = req.params.metadataName
+  if (imageName.endsWith('.bin.json')) {
+    sendJsonFile(imageName, res)
+  }
+})
+
 app.get('/svg/:imageName', (req, res) => {
   const imageName = req.params.imageName
   // See if a file with the given name exists in . and if it ends with .bin
