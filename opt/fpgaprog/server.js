@@ -130,6 +130,11 @@ app.get('/debug/:imageName', (req, res) => {
   }
 })
 
+app.get('/config/client-config.json', (req, res) => {
+  // See if a file with the given name exists in . and if it ends with .bin
+  sendJsonFile('client-config.json', res)
+})
+
 // Fetch image metadata (same name as bin file but with .bin.json extension)
 app.get('/metadata/:metadataName', (req, res) => {
   const imageName = req.params.metadataName
@@ -158,11 +163,16 @@ app.get('/__devtools__/', (req, res) => {
   res.redirect(303, 'http://localhost:5173//__devtools__/')
 })
 
-router.get('/*', (_req, res) => {
+router.get('/', (_req, res) => {
+  res.render('index.html.ejs')
+})
+// Fallback
+router.get('/:file', (_req, res) => {
   res.render('index.html.ejs')
 })
 
 app.use('/', express.static(publicPath))
+
 app.use(router)
 
 app.listen(port, () => {
