@@ -1,4 +1,5 @@
 # Based on cs50/cli https://github.com/cs50/cli/
+# And yosys / open-oss-cad https://github.com/davidsiaw/yosys-docker
 
 # Build stage
 FROM ubuntu:24.04
@@ -17,6 +18,10 @@ RUN apt-get -y install \
         curl \ 
         wget
 
+        # udev \
+        # cmake
+# Added udev & cmake above for openfpgaLoader support
+
 #### FPGA programmer / server support: 
 # Install Node.js, npm, and express
 RUN apt-get -y install \
@@ -33,24 +38,35 @@ RUN apt-get -y install \
 ### Python development tools
 RUN apt-get -y install \
     python3-pip \
-    pipx
+    pipx 
 
-# Generic verilog support tools
-RUN apt-get -y install \
-    iverilog \
-    verilator \
-    yosys 
 
-# TODO / Consider
-## Consider using a newer version of yosys and the system verilog 
-## https://github.com/chipsalliance/synlig 
+ADD install-osscad.sh /install-osscad.sh
 
-# ice40 specific tools
-RUN apt-get -y install \
-    fpga-icestorm \
-    nextpnr-ice40
+ARG TARGETOS
+ARG TARGETARCH
+ARG DATESTAMP
 
-# RISC-V tools
+RUN echo $TARGETOS $TARGETARCH
+
+RUN bash install-osscad.sh
+
+# # Generic verilog support tools
+# RUN apt-get -y install \
+#     iverilog \
+#     verilator \
+#     yosys 
+
+# # TODO / Consider
+# ## Consider using a newer version of yosys and the system verilog 
+# ## https://github.com/chipsalliance/synlig 
+
+# # ice40 specific tools
+# RUN apt-get -y install \
+#     fpga-icestorm \
+#     nextpnr-ice40
+
+# # RISC-V tools
 RUN apt-get -y install \
     gcc-riscv64-unknown-elf 
 
@@ -86,7 +102,7 @@ ENV LANG=C.UTF-8
 #     tar -C /usr/local --strip-components 1 -xf verible-v0.0-3833-gcf1fc255-linux-static-${ARCHITECTURE}.tar.gz 
 
 # Make the locally installed things available in the path / global
-ENV PATH="$PATH:/root/.local/bin/"
+ENV PATH="$PATH:/root/.local/bin/:/opt/oss-cad-suite/bin/"
 #RUN mv -rf /root/.local/bin/ /usr/local/bin/
 
 # Graphviz for .dot files 
@@ -108,6 +124,8 @@ RUN $VIRTUAL_ENV/bin/pip install \
     cocotb-test \ 
     json5 \
     json2table
+
+# Review above:  cocotb is in oss-cad-suite (cocotb-test is not)
 
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
