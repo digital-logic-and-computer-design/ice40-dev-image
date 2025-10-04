@@ -23,3 +23,17 @@ make build TAG=v1
 make push TAG=v1
 make make-latest TAG=v1
 ```
+
+# Bleh
+
+OSS-CAD-SUITE isn't really any better...
+
+Revert to install of needed tools manually and add in GHDL and plugins
+
+https://github.com/povik/yosys-slang
+
+synlin. --- yosys integration isn't a strong.  Go Slang
+yosys-slang 
+
+https://github.com/ghdl/ghdl-yosys-plugin
+
