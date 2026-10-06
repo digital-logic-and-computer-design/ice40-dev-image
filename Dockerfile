@@ -42,6 +42,7 @@ RUN apt-get -y install \
 
 
 ADD install-osscad.sh /install-osscad.sh
+ADD install-ossschem.sh /install-ossschem.sh
 
 ARG TARGETOS
 ARG TARGETARCH
@@ -50,6 +51,7 @@ ARG DATESTAMP
 RUN echo $TARGETOS $TARGETARCH
 
 RUN bash install-osscad.sh
+RUN bash install-ossschem.sh
 
 # # Generic verilog support tools
 # RUN apt-get -y install \

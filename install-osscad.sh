@@ -19,8 +19,8 @@ case $TARGETARCH in
     ;;
 esac
 
-# build=`curl -s https://api.github.com/repos/YosysHQ/oss-cad-suite-build/releases/latest | grep browser_download_url | grep linux-$arch | cut -f4 -d\"`
-build=`curl -s https://api.github.com/repos/YosysHQ/oss-cad-suite-build/releases/tags/2025-10-03 | grep browser_download_url | grep linux-$arch | cut -f4 -d\"`
+build=`curl -s https://api.github.com/repos/YosysHQ/oss-cad-suite-build/releases/latest | grep browser_download_url | grep linux-$arch | cut -f4 -d\"`
+# build=`curl -s https://api.github.com/repos/YosysHQ/oss-cad-suite-build/releases/tags/2025-10-03 | grep browser_download_url | grep linux-$arch | cut -f4 -d\"`
 
 wget --no-check-certificate $build -O build.tgz
 tar xfz build.tgz
@@ -28,6 +28,9 @@ rm build.tgz
 
 mv oss-cad-suite /opt
 popd
+
+
+
 
 # git clone https://github.com/trabucayre/openFPGALoader
 # cd openFPGALoader

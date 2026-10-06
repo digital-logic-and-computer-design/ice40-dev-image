@@ -14,5 +14,13 @@ then
     # Rename files to remove the -dlca suffix
     for f in *-dlacd.vsix; do mv -- "$f" "${f%-dlacd*}.vsix"; done
 fi
+# and now rename them to match what's in the image
+mv riscv-venus-cse2600.vsix bsiever-riscv-venus-cse2600.vsix
+mv digitaljs.vsix bsiever-bsiever-digitaljs.vsix
+mv edacation.vsix bsiever-bsiever-edacation.vsix
+mv lushay-code-constraints.vsix bsiever-lushay-code-constraints.vsix
+mv hdl-problemmatchers.vsix bsiever-hdl-problemmatchers.vsix
+mv vscode-tasks-sidebar.vsix bsiever-vscode-tasks-sidebar.vsix
+
 # Just the extensions. Not as a sub-module.
 rm -Rf .git
